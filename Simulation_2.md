@@ -2,7 +2,7 @@
 
 ## Memory
 
-![Simulation 2 Memory](img/simulation_2_memory.png)
+![Simulation 2 Memory](../img/simulation_2_memory.png)
 
 
 ## Loading Program In MEM.v
@@ -37,7 +37,7 @@
 
 > Note that address fields (MAR, PC) are in decimal format, other fields are hexadecimal
 
-!(wave screenshot)[img/simulation_2_screenshot.png]
+![wave screenshot](img/simulation_2_screenshot.png)    
 [raw high quality image](https://raw.githubusercontent.com/ibraheemalayan/Simple_Computer_Verilog_Part_2/master/img/simulation_2_screenshot.png)
 
 
