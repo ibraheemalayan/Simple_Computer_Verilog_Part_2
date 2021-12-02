@@ -1,14 +1,23 @@
-View Rendered README on Github [https://github.com/ibraheemalayan/Simple_Computer_Verilog_Part_1](https://github.com/ibraheemalayan/Simple_Computer_Verilog_Part_1.git)
+                                      ╔════════════════━━─── • ───━━━═══════════════╗
 
-# Simple Computer In Verilog
+                                                  Simple Computer In Verilog
+
+                                      ╚═══════════════━━━─── • ───━━━═══════════════╝
+
+-----------
+
+
+###### View Rendered README on Github [https://github.com/ibraheemalayan/Simple_Computer_Verilog_Part_1](https://github.com/ibraheemalayan/Simple_Computer_Verilog_Part_1.git)
+
+# Simple Computer In Verilog 💻
 
 project 1 phase II in the computer organization course (ENCS2380) at Birzeit University
 
 ## Partners 
 
 ```
-Ibraheem Alyan  1201180
-Hammam Khaled   1191081
+👷 Ibraheem Alyan  1201180
+👷 Hammam Khaled   1191081
 ```
 
 ------------------------------
