@@ -31,7 +31,7 @@ project 1 phase II in the computer organization course (ENCS2380) at [Birzeit Un
 * [CPU.v](./modules/CPU.v)
 CPU module that can execute the 12 instructions
 
-* [MEM.v](./modules/MEM.v)
+* [MEMORY.v](./modules/MEM.v)
 a 384 byte memory (128 cells each is 3 bytes)    
 
 * [CLK_GEN.v](./modules/CLK_GEN.v)
