@@ -200,7 +200,24 @@ always @(posedge clk ) begin
 
                 stack : begin
                     $display("(%0t) CPU > decode_instruction : stack ", $time);
-                    state=execute;
+
+                    case (IR[opcode_field_msb:opcode_field_lsb]) // determine operation based on opcode
+                        
+                        // 0000 PUSH Ri; Add Ri to the top of the stack (Stack Addressing)
+                        push : begin
+                            MAR <= SP + 1;
+                            state=execute;
+                        end
+
+                        // 0001 POP Ri; Ri = top of the stack then clear the top of the stack (Stack Addressing)
+                        pop : begin
+                            MAR <= SP;
+                            state=fetch_operand;
+                        end
+
+                    endcase
+
+                    
                 end
 
                 register : begin
@@ -326,7 +343,19 @@ always @(posedge clk ) begin
                     Registar_File[IR[register_field_msb:register_field_lsb]] <= Registar_File[IR[register_field_msb:register_field_lsb]] >> IR[operand_feild_msb:operand_feild_lsb];
                 end
 
-                // TODO Push, Pop
+                // 0000 PUSH Ri; Add Ri to the top of the stack (Stack Addressing)
+                push : begin
+                    MBR_out <= Registar_File[IR[register_field_msb:register_field_lsb]];
+                    Mem_EN=1;
+                    Mem_CS=mem_write;
+                    SP <= SP + 1;
+                end
+
+                // 0001 POP Ri; Ri = top of the stack then clear the top of the stack (Stack Addressing)
+                pop : begin
+                    Registar_File[IR[register_field_msb:register_field_lsb]] <= MBR_in;
+                    SP <= SP - 1;
+                end
 
                 default: begin
                     Mem_EN=0;

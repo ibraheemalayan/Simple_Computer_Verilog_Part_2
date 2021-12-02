@@ -36,7 +36,7 @@ initial begin
 
     $display("(%0t) > running the test bench ...", $time);
 
-    #220 $display("(%0t) > finishing simulation\n\n", $time);
+    #250 $display("(%0t) > finishing simulation\n\n", $time);
 
     #1 $finish;       // Finish simulation after 220 nano second
 

@@ -160,6 +160,35 @@ initial begin
     // Cells [31] = 19'd32;
     // Cells [32] = 19'd3;
 
+
+    //////////////////////////////////////////////////////
+    // simulation 4
+    //////////////////////////////////////////////////////
+
+    ///////////// Instructions /////////////
+    
+    // 20 Load R1, [30]
+    Cells [20] = { load, 4'd1, 8'd30, direct };
+
+    // 21 Push R1
+    Cells [21] = { push, 4'd1, 8'd0, stack };
+
+    // 22 Shr R1,1
+    Cells [22] = { sr, 4'd1, 8'd1, immediate };
+
+    // 23 Pop R1
+    Cells [23] = { pop, 4'd1, 8'd0, stack };
+
+    // 24 Store R1, [33]
+    Cells [24] = { store, 4'd1, 8'd33, direct };
+
+    ///////////// Data /////////////
+    
+    // 30 5
+    Cells [30] = 19'd5;
+    Cells [31] = 19'd32;
+    Cells [32] = 19'd3;
+
 end
     
 endmodule
