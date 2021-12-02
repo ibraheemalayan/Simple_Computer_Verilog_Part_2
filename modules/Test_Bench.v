@@ -8,8 +8,8 @@ wire clock;
 
 CLK_GEN clock_generator(clock);
 
-wire [15:0] data_in_mem_out_of_cpu;
-wire [15:0] data_out_of_mem_in_cpu;
+wire [23:0] data_in_mem_out_of_cpu;
+wire [23:0] data_out_of_mem_in_cpu;
 wire [7:0] MAR;
 
 wire Mem_EN, Mem_CS;

@@ -10,18 +10,29 @@ module CPU (
 // addresses are 8 bits
 output reg [7:0] MAR; // Memory Address Register
 
-// Memory Buffer Registers (words are 16 bits)
-output reg [15:0] MBR_out;
-input wire [15:0] MBR_in;
+// Memory Buffer Registers (words are 24 bits)
+output reg [23:0] MBR_out;
+input wire [23:0] MBR_in;
 
-// program counter
-reg [15:0] PC;
+// program counter, stack pointer register
+reg [7:0] PC, SP, Status_Reg;
 
-// Instruction register
-reg [15:0] IR;
+// status register parameters
+parameter 
+    // suppose Status register [ 2 ] is the zero flag
+    zero_flag = 2,
 
-// register file contains 16 registers each is 16 bits
-reg [15:0] Registar [0:15];
+    // and     Status register [ 3 ] is a flag for indirect operand fetch state (0 for fetch_pointer, 1 for fetch_oprand_using_pointer)
+    indirect_flag = 3;
+
+// Instruction register (instructions are 19 bits)
+reg [18:0] IR;
+
+// register file contains 16 registers each is 24 bits
+reg [23:0] Registar_File [0:15];
+
+// accumlator
+reg [23:0] AC;
 
 // clock
 input wire clk;
@@ -36,26 +47,81 @@ reg [2:0] state;
 parameter 
     copy_pc_to_mar = 0,
     fetch_instruction = 1,
-    decode_instruction = 2,
+    decode_instruction = 2, //and determine addressing mode
     fetch_operand = 3,
-    execute = 4;
+    copy_pointer_to_MAR=4,
+    execute = 5;
 
 // memory operations
 parameter 
     mem_read = 0,
     mem_write = 1;
 
+// addressing modes
+parameter 
+    direct = 3'b000,
+    indirect = 3'b001,
+    immediate = 3'b010,
+    register = 3'b011,
+    stack = 3'b100;
+
+// instruction fields
+parameter 
+    opcode_field_msb = 18,
+    opcode_field_lsb = 15,
+
+    register_field_msb = 14,
+    register_field_lsb = 11,
+
+    operand_feild_msb = 10,
+    operand_feild_lsb = 3,
+
+    addressing_mode_field_msb = 2,
+    addressing_mode_field_lsb = 0;
+
 // opcodes
 parameter 
-    load = 4'h3, 
-    add = 4'h7, 
-    store = 4'hB;
+
+    // 0011 LOAD Ri, M; loads the contents of memory location M into Ri, where Ri is the number of the register (Direct Addressing)
+    // 0011 LOAD Ri, 8; set Ri to 8 (Immediate Addressing)
+    // 0011 LOAD Ri, [[M]]; use the contents of memory location M as a pointer to the operand then load it to Ri, (InDirect Addressing)
+    load = 4'b0011,
+    
+    // 1011 STORE Ri, M; stores the contents of Ri into memory location M. (Direct Addressing)
+    store = 4'b1011,
+
+    // 0111 ADD Ri, M; adds the contents of memory location M to the contents of Ri, and stores the result in Ri. (Direct Addressing)
+    // 0111 ADD Ri, Rj; Ri = Ri + Rj (Register Addressing)
+    add = 4'b0111,
+
+    // 1100 JUMP M; unconditional jump to location M in memory. (Direct Addressing)
+    jump = 4'b1100,
+
+    // 1101 CMP Ri, Rj; compare two registers and set zero flag if Ri = Rj (Register Addressing)
+    cmp = 4'b1101,
+
+    // 1110 SL Ri, C; applying logical shift left operation to Ri, such that, C is constant (Immediate Addressing) 
+    sl = 4'b1110,
+
+    // 1111 SR Ri, C; applying logical shift right operation to Ri,C is constant (Immediate Addressing)
+    sr = 4'b1111,
+
+    // 0000 PUSH Ri; Add Ri to the top of the stack (Stack Addressing)
+    push = 4'b0000,
+
+    // 0001 POP Ri; Ri = top of the stack then clear the top of the stack (Stack Addressing)
+    pop = 4'b0001;
+    
 
 initial begin
 
     $display("(%0t) > initializing CPU ...", $time);
+    
+    $dumpfile("waves.vcd");
+    $dumpvars(0, Registar_File[1], Registar_File[2]);
 
-    PC=20; // to start the sample program (defined in the memory module from address 20)
+    PC=20; // to start the sample program (defined in the memory module from address 10)
+    SP=8'b00000000;
     state=0;
     Mem_EN=0;
     Mem_CS=0;
@@ -87,90 +153,189 @@ always @(posedge clk ) begin
 
             $display("(%0t) CPU > fetch_instruction", $time);
 
-            $display("(%0t) CPU > MBR_in = %0h", $time, MBR_in);
+            $display("(%0t) CPU > MBR_in = %0b", $time, MBR_in);
 
             Mem_EN=0;
 
-            IR <= MBR_in; // reading instruction to Instruction register
+            IR <= MBR_in[18:0]; // reading instruction to Instruction register
             PC <= PC + 1; //increase program counter to point to the next instruction
             state=decode_instruction;
         end
 
+        //////////////////////////////////////////////////////////
+
+        //////////////////////////////////////////////////////////
+
         // 2: decode instruction ( prepare to fetch operand , copy operand address from instruction to MAR and send read CS)
         decode_instruction: begin
 
-            $display("(%0t) CPU > IR = %0h", $time, IR);
+            $display("(%0t) CPU > IR = %0b", $time, IR);
 
             $display("(%0t) CPU > decode_instruction", $time);
 
-            MAR <= IR [7:0]; // copy first 8 bits from the instruction (memory address)
-            state=fetch_operand;
-        end
+            #1;
 
-        // 3: fetch operand
-        fetch_operand: begin
+            case (IR[addressing_mode_field_msb:addressing_mode_field_lsb]) // determine addressing mode
 
-            $display("(%0t) CPU > fetch_operand", $time);
-
-            state=execute;
-
-            case (IR[15:12]) // determine operation based on opcode
-
-                load : begin
-                    Mem_EN=1;
-                    Mem_CS=mem_read;
+                direct : begin
+                    $display("(%0t) CPU > decode_instruction : direct, %0d:%0d is %0b >> %0d >> %0h", $time, operand_feild_msb, operand_feild_lsb, IR[operand_feild_msb:operand_feild_lsb], IR[operand_feild_msb:operand_feild_lsb], IR[operand_feild_msb:operand_feild_lsb] );
+                    MAR <= IR [operand_feild_msb:operand_feild_lsb]; // copy operand from the instruction (memory address of operand)
+                    state=fetch_operand;
                 end
             
-                add : begin
-                    Mem_EN=1;
-                    Mem_CS=mem_read;
+                indirect : begin
+                    $display("(%0t) CPU > decode_instruction : indirect ", $time);
+                    MAR <= IR [operand_feild_msb:operand_feild_lsb]; // copy operand from the instruction (memory address of operand pointer)
+                    state=fetch_operand;
+                    Status_Reg[indirect_flag] = 0;
                 end
 
-                store : begin
-                    // no operand to fetch
-                end  
-
-                default: begin
-                    Mem_EN=0;
-                    state = 5; // raise some exception (unknown opcode)
-                    $display("(%0t) Unknown Opcode !", $time);
+                immediate : begin
+                    $display("(%0t) CPU > decode_instruction : immediate ", $time);
+                    state=execute;
                 end
+
+                stack : begin
+                    $display("(%0t) CPU > decode_instruction : stack ", $time);
+                    state=execute;
+                end
+
+                register : begin
+                    $display("(%0t) CPU > decode_instruction : register ", $time);
+                    state=execute;
+                end
+                
+                // for immediate, register, stack there is nothing to fetch so we jump to state = TODO
                 
             endcase
         end
 
-        // 4: execute
+        // 3: fetch direct operand / or fetch pointer if indirect
+        fetch_operand: begin
+
+            // fetch whats address is in MAR , and save it in MBR_in
+
+            $display("(%0t) CPU > fetch_operand", $time);
+
+            Mem_EN=1;
+            Mem_CS=mem_read; // copy operand (or it's pointer) from memory address at MAR to MBR
+
+            if (IR[addressing_mode_field_msb:addressing_mode_field_lsb] == indirect && !Status_Reg[indirect_flag]) begin
+                state=copy_pointer_to_MAR;
+            end else begin
+                state=execute;
+
+            end
+
+        end
+
+        // 4: fetch operand from pointer
+        copy_pointer_to_MAR: begin
+
+            $display("(%0t) CPU > copy_pointer_to_MAR", $time);
+
+            MAR <= IR [operand_feild_msb:operand_feild_lsb]; // copy operand from the instruction (memory address of operand)
+            Status_Reg[indirect_flag] = 1;
+            state=fetch_operand;
+            
+        end
+
+        // 5: execute
         execute: begin
 
             $display("(%0t) CPU > execute", $time);
 
             Mem_EN=0;
-
-            case (IR[15:12]) // determine operation based on opcode which is bits 12-15 according to our format
-
-                // perform the addition of Ri to MDR_in and save the sum in Ri
-                add : begin
-                    Registar [ IR[11:8] ] <= Registar [ IR[11:8] ] + MBR_in;
-                    state = 0;
-                end
-
-                // copy the value of the Memory Buffer Register to Ri
+            
+            case (IR[opcode_field_msb:opcode_field_lsb]) // determine operation based on opcode
+                
                 load : begin
-                    Registar [ IR[11:8] ] <= MBR_in;
-                    state = 0;
+
+                    case (IR[addressing_mode_field_msb:addressing_mode_field_lsb]) // determine addressing mode
+
+                        // 0011 LOAD Ri, M; loads the contents of memory location M into Ri, where Ri is the number of the register (Direct Addressing)
+                        direct : begin
+                            Registar_File[IR[register_field_msb:register_field_lsb]] <= MBR_in; // copy operand from MBR to Ri                     
+                        end
+                        
+                        // 0011 LOAD Ri, [[M]]; use the contents of memory location M as a pointer to the operand then load it to Ri, (InDirect Addressing)
+                        indirect : begin
+                            Registar_File[IR[register_field_msb:register_field_lsb]] <= MBR_in; // copy operand from MBR to Ri
+                        end
+                        
+                        // 0011 LOAD Ri, 8; set Ri to 8 (Immediate Addressing)
+                        immediate : begin
+                            Registar_File[IR[register_field_msb:register_field_lsb]] <= IR[operand_feild_msb:operand_feild_lsb]; // copy operand from instruction to Ri
+                        end
+                
+                    endcase
+
+                    state=0;
+
                 end
 
-                // copy Ri to MBR_out and send enable, write signals to the memory to store it
+                // 1011 STORE Ri, M; stores the contents of Ri into memory location M. (Direct Addressing)
                 store : begin
-                    MBR_out <= Registar [ IR[11:8] ];
+                    // copy Ri to MBR_out and send enable, write signals to the memory to store it
+                    MBR_out <= Registar_File [ IR[register_field_msb:register_field_lsb] ];
                     Mem_EN=1;
                     Mem_CS=mem_write;
                     state=0;
                 end
+                
+
+                add : begin
+
+                    case (IR[addressing_mode_field_msb:addressing_mode_field_lsb]) // determine addressing mode
+
+                        // 0111 ADD Ri, M; adds the contents of memory location M to the contents of Ri, and stores the result in Ri. (Direct Addressing)
+                        direct : begin
+                            Registar_File[IR[register_field_msb:register_field_lsb]] <= Registar_File[IR[register_field_msb:register_field_lsb]] + MBR_in;
+                        end
+                        
+                        // 0111 ADD Ri, Rj; Ri = Ri + Rj (Register Addressing)
+                        register : begin
+                            Registar_File[IR[register_field_msb:register_field_lsb]] <= Registar_File[IR[register_field_msb:register_field_lsb]] + Registar_File[IR[operand_feild_msb:operand_feild_lsb]];
+                        end
+                
+                    endcase
+
+                    state = 0;
+                end
+                
+                // 1100 JUMP M; unconditional jump to location M in memory. (Direct Addressing)
+                jump : begin
+                    PC <= IR[operand_feild_msb:operand_feild_lsb];
+                    state = 0;
+                end
+
+                // 1101 CMP Ri, Rj; compare two registers and set zero flag if Ri = Rj (Register Addressing)
+                cmp : begin
+                    
+                    if (Registar_File[IR[register_field_msb:register_field_lsb]] == Registar_File[IR[operand_feild_msb:operand_feild_lsb]]) begin
+                        Status_Reg[zero_flag] = 1;
+                    end else begin
+                        Status_Reg[zero_flag] = 0;
+                    end
+
+                    state = 0;
+                end
+                
+                // 1110 SL Ri, C; applying logical shift left operation to Ri, such that, C is constant (Immediate Addressing) 
+                sl : begin
+                    Registar_File[IR[register_field_msb:register_field_lsb]] <= Registar_File[IR[register_field_msb:register_field_lsb]] << IR[operand_feild_msb:operand_feild_lsb];
+                end
+
+                // 1111 SR Ri, C; applying logical shift right operation to Ri,C is constant (Immediate Addressing)
+                sr : begin
+                    Registar_File[IR[register_field_msb:register_field_lsb]] <= Registar_File[IR[register_field_msb:register_field_lsb]] >> IR[operand_feild_msb:operand_feild_lsb];
+                end
+
+                // TODO Push, Pop
 
                 default: begin
                     Mem_EN=0;
-                    state = 5; // TODO raise some exception (unknown opcode)
+                    state = 10; // TODO raise some exception (unknown opcode)
                     $display("(%0t) Unknown Opcode !", $time);
                 end
                     

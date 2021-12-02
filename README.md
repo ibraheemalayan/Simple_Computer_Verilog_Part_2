@@ -2,7 +2,7 @@ View Rendered README on Github [https://github.com/ibraheemalayan/Simple_Compute
 
 # Simple Computer In Verilog
 
-project 1 in the computer organization course (ENCS2380) at Birzeit University
+project 1 phase II in the computer organization course (ENCS2380) at Birzeit University
 
 ------------------------------
 
@@ -13,10 +13,10 @@ project 1 in the computer organization course (ENCS2380) at Birzeit University
 ## Modules
 
 * [CPU.v](./modules/CPU.v)
-CPU module that can execute the 3 instructions
+CPU module that can execute the 12 instructions
 
 * [MEM.v](./modules/MEM.v)
-a 256 byte memory (128 cells each is 2 bytes)    
+a 384 byte memory (128 cells each is 3 bytes)    
 
 * [CLK_GEN.v](./modules/CLK_GEN.v)
 a sample clock generator that inverts the clock signal each 5 ns (full cycle is 10 ns)    
@@ -31,8 +31,8 @@ the test bench that connects the modules and is the top level file in the simula
 install [Icarus Verilog](https://github.com/steveicarus/iverilog) and add its binaries to your shell path then run the following
 
 ```
-git clone https://github.com/ibraheemalayan/Simple_Computer_Verilog_Part_1.git
-cd Simple_Computer_Verilog_Part_1/modules
+git clone https://github.com/ibraheemalayan/Simple_Computer_Verilog_Part_2.git
+cd Simple_Computer_Verilog_Part_2/modules
 iverilog -o compiled_testbench.vvp Test_Bench.v
 vvp compiled_testbench.vvp
 ```
@@ -424,3 +424,7 @@ ibraheemalyan@Ibraheems-MacBook-Pro modules % vvp compiled_testbench.vvp
 
 
 ```
+
+## TODOs
+
+* instruction requires more than a memory cell

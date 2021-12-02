@@ -15,11 +15,52 @@ input wire EN, CS, clk;
 input wire [7:0] MAR;
 
 // data registers (words are 16 bits)
-input wire [15:0] data_in;
-output reg [15:0] data_out;
+input wire [23:0] data_in;
+output reg [23:0] data_out;
 
-// memory is 256 byte ( 128 cell, each cell is 2 bytes )
-reg [15:0] Cells [0:127];
+// memory is 384 byte ( 128 cell, each cell is 3 bytes )
+reg [23:0] Cells [0:127];
+
+// opcodes
+parameter 
+
+    // 0011 LOAD Ri, M; loads the contents of memory location M into Ri, where Ri is the number of the register (Direct Addressing)
+    // 0011 LOAD Ri, 8; set Ri to 8 (Immediate Addressing)
+    // 0011 LOAD Ri, [[M]]; use the contents of memory location M as a pointer to the operand then load it to Ri, (InDirect Addressing)
+    load = 4'b0011,
+    
+    // 1011 STORE Ri, M; stores the contents of Ri into memory location M. (Direct Addressing)
+    store = 4'b1011,
+
+    // 0111 ADD Ri, M; adds the contents of memory location M to the contents of Ri, and stores the result in Ri. (Direct Addressing)
+    // 0111 ADD Ri, Rj; Ri = Ri + Rj (Register Addressing)
+    add = 4'b0111,
+
+    // 1100 JUMP M; unconditional jump to location M in memory. (Direct Addressing)
+    jump = 4'b1100,
+
+    // 1101 CMP Ri, Rj; compare two registers and set zero flag if Ri = Rj (Register Addressing)
+    cmp = 4'b1101,
+
+    // 1110 SL Ri, C; applying logical shift left operation to Ri, such that, C is constant (Immediate Addressing) 
+    sl = 4'b1110,
+
+    // 1111 SR Ri, C; applying logical shift right operation to Ri,C is constant (Immediate Addressing)
+    sr = 4'b1111,
+
+    // 0000 PUSH Ri; Add Ri to the top of the stack (Stack Addressing)
+    push = 4'b0000,
+
+    // 0001 POP Ri; Ri = top of the stack then clear the top of the stack (Stack Addressing)
+    pop = 4'b0001;
+
+// addressing modes
+parameter 
+    direct = 3'b000,
+    indirect = 3'b001,
+    immediate = 3'b010,
+    register = 3'b011,
+    stack = 3'b100;
 
 always @(posedge clk) begin
 
@@ -46,28 +87,33 @@ initial begin
     
     $display("(%0t) > initializing memory ...", $time);
 
+    // Instruction Format
+    // Opcode (4) Reg (4) Operand (8) Addressing mode (3)
+
     // For testing
-    // sample program
 
-    // (instruction) Load R1, [30]
-    // 0011 0001 00011110
-    Cells [20] = 16'h311E;
+    //////////////////////////////////////////////////////
+    // simulation 1
+    //////////////////////////////////////////////////////
 
-    // (instruction) Add R1, [31]
-    // 0111 0001 00011111
-    Cells [21] = 16'h711F;
+    ///////////// Instructions /////////////
+    
+    // 20 Load R1,[30]
+    Cells [20] = { load, 4'd1, 8'd30, direct };
 
-    // (instruction) Store R1, [32]
-    // 1011 0001 00100000
-    Cells [22] = 16'hB120;
-   
+    // 21 Load R2,4
+    Cells [21] = { load, 4'd2, 8'd4, immediate };
 
-    // (data) 5 at 30 / 8 at 31
-    Cells [30] = 16'd5;
-    Cells [31] = 16'd8;
+    // 22 Add R1,R2
+    Cells [22] = { add, 4'd1, 8'd2, register };
 
-    // to check if the simulation went right, the expected value of Cells[32] is "13" decimal ("D" hexadecimal)
-    #200 $display("(%0t) > value of cell[32] (hexadecimal) is %0h ", $time, Cells[32]);
+    // 23 Store R1, [31]
+    Cells [23] = { store, 4'd1, 8'd31, direct };
+
+    ///////////// Data /////////////
+    
+    // 30 5
+    Cells [30] = 19'd5;
 
 end
     

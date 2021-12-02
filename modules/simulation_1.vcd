@@ -1,0 +1,279 @@
+$date
+	Thu Dec  2 22:12:37 2021
+$end
+$version
+	Icarus Verilog
+$end
+$timescale
+	1s
+$end
+$scope module TestBench $end
+$scope module cpu $end
+$var reg 24 ! \Registar_File[1] [23:0] $end
+$upscope $end
+$upscope $end
+$scope module TestBench $end
+$scope module cpu $end
+$var reg 24 " \Registar_File[2] [23:0] $end
+$upscope $end
+$upscope $end
+$scope module TestBench $end
+$var wire 24 # data_out_of_mem_in_cpu [23:0] $end
+$var wire 24 $ data_in_mem_out_of_cpu [23:0] $end
+$var wire 1 % clock $end
+$var wire 1 & Mem_EN $end
+$var wire 1 ' Mem_CS $end
+$var wire 8 ( MAR [7:0] $end
+$scope module Mem $end
+$var wire 24 ) data_in [23:0] $end
+$var wire 1 % clk $end
+$var wire 8 * MAR [7:0] $end
+$var wire 1 & EN $end
+$var wire 1 ' CS $end
+$var reg 24 + data_out [23:0] $end
+$upscope $end
+$scope module clock_generator $end
+$var reg 1 % clock $end
+$upscope $end
+$scope module cpu $end
+$var wire 24 , MBR_in [23:0] $end
+$var wire 1 % clk $end
+$var reg 19 - IR [18:0] $end
+$var reg 8 . MAR [7:0] $end
+$var reg 24 / MBR_out [23:0] $end
+$var reg 1 ' Mem_CS $end
+$var reg 1 & Mem_EN $end
+$var reg 8 0 PC [7:0] $end
+$var reg 8 1 SP [7:0] $end
+$var reg 8 2 Status_Reg [7:0] $end
+$var reg 3 3 state [2:0] $end
+$upscope $end
+$upscope $end
+$enddefinitions $end
+#0
+$dumpvars
+b0 3
+bx 2
+b0 1
+b10100 0
+bx /
+bx .
+bx -
+bx ,
+bx +
+bx *
+bx )
+bx (
+0'
+0&
+0%
+bx $
+bx #
+bx "
+bx !
+$end
+#5
+1%
+#8
+b10100 (
+b10100 *
+b10100 .
+b1 3
+1&
+#10
+0%
+#15
+1%
+#16
+b11000100011110000 #
+b11000100011110000 +
+b11000100011110000 ,
+#17
+b10101 0
+b11000100011110000 -
+b10 3
+0&
+#20
+0%
+#25
+1%
+#28
+b11110 (
+b11110 *
+b11110 .
+b11 3
+#30
+0%
+#35
+1%
+#37
+b101 3
+1&
+#40
+0%
+#45
+1%
+#46
+b101 #
+b101 +
+b101 ,
+#47
+b101 !
+b0 3
+0&
+#50
+0%
+#55
+1%
+#58
+b10101 (
+b10101 *
+b10101 .
+b1 3
+1&
+#60
+0%
+#65
+1%
+#66
+b11001000000100010 #
+b11001000000100010 +
+b11001000000100010 ,
+#67
+b10110 0
+b11001000000100010 -
+b10 3
+0&
+#70
+0%
+#75
+1%
+#78
+b101 3
+#80
+0%
+#85
+1%
+#87
+b100 "
+b0 3
+#90
+0%
+#95
+1%
+#98
+b10110 (
+b10110 *
+b10110 .
+b1 3
+1&
+#100
+0%
+#105
+1%
+#106
+b111000100000010011 #
+b111000100000010011 +
+b111000100000010011 ,
+#107
+b10111 0
+b111000100000010011 -
+b10 3
+0&
+#110
+0%
+#115
+1%
+#118
+b101 3
+#120
+0%
+#125
+1%
+#127
+b1001 !
+b0 3
+#130
+0%
+#135
+1%
+#138
+b10111 (
+b10111 *
+b10111 .
+b1 3
+1&
+#140
+0%
+#145
+1%
+#146
+b1011000100011111000 #
+b1011000100011111000 +
+b1011000100011111000 ,
+#147
+b11000 0
+b1011000100011111000 -
+b10 3
+0&
+#150
+0%
+#155
+1%
+#158
+b11111 (
+b11111 *
+b11111 .
+b11 3
+#160
+0%
+#165
+1%
+#167
+b101 3
+1&
+#170
+0%
+#175
+1%
+#176
+bx #
+bx +
+bx ,
+#177
+b1001 $
+b1001 )
+b1001 /
+b0 3
+1'
+1&
+#180
+0%
+#185
+1%
+#188
+b11000 (
+b11000 *
+b11000 .
+b1 3
+0'
+#190
+0%
+#195
+1%
+#197
+b11001 0
+bx -
+b10 3
+0&
+#200
+0%
+#205
+1%
+#210
+0%
+#215
+1%
+#220
+0%
+#221
