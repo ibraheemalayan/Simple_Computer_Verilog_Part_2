@@ -2,7 +2,7 @@
 
 ## Memory
 
-![Simulation 2 Memory](../img/simulation_2_memory.png)
+![Simulation 2 Memory](img/simulation_2_memory.png)
 
 
 ## Loading Program In MEM.v
