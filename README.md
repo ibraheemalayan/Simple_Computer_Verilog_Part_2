@@ -1,14 +1,23 @@
-View Rendered README on Github [https://github.com/ibraheemalayan/Simple_Computer_Verilog_Part_1](https://github.com/ibraheemalayan/Simple_Computer_Verilog_Part_1.git)
+                                      ╔════════════════━━─── • ───━━━═══════════════╗
 
-# Simple Computer In Verilog
+                                                  Simple Computer In Verilog
 
-project 1 phase II in the computer organization course (ENCS2380) at Birzeit University
+                                      ╚═══════════════━━━─── • ───━━━═══════════════╝
+
+-----------
+
+
+###### View Rendered README on Github [https://github.com/ibraheemalayan/Simple_Computer_Verilog_Part_1](https://github.com/ibraheemalayan/Simple_Computer_Verilog_Part_1.git)
+
+# Simple Computer In Verilog 💻
+
+project 1 phase II in the computer organization course (ENCS2380) at [Birzeit University](https://www.birzeit.edu/)
 
 ## Partners 
 
 ```
-Ibraheem Alyan  1201180
-Hammam Khaled   1191081
+👷 Ibraheem Alyan  1201180
+👷 Hammam Khaled   1191081
 ```
 
 ------------------------------
@@ -22,7 +31,7 @@ Hammam Khaled   1191081
 * [CPU.v](./modules/CPU.v)
 CPU module that can execute the 12 instructions
 
-* [MEM.v](./modules/MEM.v)
+* [MEMORY.v](./modules/MEM.v)
 a 384 byte memory (128 cells each is 3 bytes)    
 
 * [CLK_GEN.v](./modules/CLK_GEN.v)
