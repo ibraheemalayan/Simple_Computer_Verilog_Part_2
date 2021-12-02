@@ -146,6 +146,8 @@ always @(posedge clk ) begin
             Mem_EN=1;
             Mem_CS=mem_read;
 
+            Status_Reg[indirect_flag] = 0;
+            
             state=fetch_instruction;
         end
 
@@ -235,7 +237,7 @@ always @(posedge clk ) begin
 
             $display("(%0t) CPU > copy_pointer_to_MAR", $time);
 
-            MAR <= IR [operand_feild_msb:operand_feild_lsb]; // copy operand from the instruction (memory address of operand)
+            MAR <= MBR_in[18:0]; // copy operand from the instruction (memory address of operand)
             Status_Reg[indirect_flag] = 1;
             state=fetch_operand;
             
@@ -271,8 +273,6 @@ always @(posedge clk ) begin
                 
                     endcase
 
-                    state=0;
-
                 end
 
                 // 1011 STORE Ri, M; stores the contents of Ri into memory location M. (Direct Addressing)
@@ -281,7 +281,6 @@ always @(posedge clk ) begin
                     MBR_out <= Registar_File [ IR[register_field_msb:register_field_lsb] ];
                     Mem_EN=1;
                     Mem_CS=mem_write;
-                    state=0;
                 end
                 
 
@@ -300,14 +299,11 @@ always @(posedge clk ) begin
                         end
                 
                     endcase
-
-                    state = 0;
                 end
                 
                 // 1100 JUMP M; unconditional jump to location M in memory. (Direct Addressing)
                 jump : begin
                     PC <= IR[operand_feild_msb:operand_feild_lsb];
-                    state = 0;
                 end
 
                 // 1101 CMP Ri, Rj; compare two registers and set zero flag if Ri = Rj (Register Addressing)
@@ -318,8 +314,6 @@ always @(posedge clk ) begin
                     end else begin
                         Status_Reg[zero_flag] = 0;
                     end
-
-                    state = 0;
                 end
                 
                 // 1110 SL Ri, C; applying logical shift left operation to Ri, such that, C is constant (Immediate Addressing) 
@@ -341,6 +335,9 @@ always @(posedge clk ) begin
                 end
                     
             endcase
+
+            state = 0;
+
         end
 
     endcase

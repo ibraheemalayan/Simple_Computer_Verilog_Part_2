@@ -4,6 +4,7 @@
 
 ![Simulation 2 Memory](img/simulation_2_memory.png)
 
+## Waves File [simulation_2.vcd](./modules/simulation_2.vcd)
 
 ## Loading Program In MEM.v
 

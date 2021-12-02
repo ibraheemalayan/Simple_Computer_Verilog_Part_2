@@ -4,6 +4,13 @@ View Rendered README on Github [https://github.com/ibraheemalayan/Simple_Compute
 
 project 1 phase II in the computer organization course (ENCS2380) at Birzeit University
 
+## Partners 
+
+```
+Ibraheem Alyan  1201180
+Hammam Khaled   1191081
+```
+
 ------------------------------
 
 ## [Project Paper](https://drive.google.com/file/d/1CynuBT3mAd_htxdpWnm3OeJVcPVh-bn9/view?usp=sharing)

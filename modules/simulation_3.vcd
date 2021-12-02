@@ -1,0 +1,242 @@
+$date
+	Thu Dec  2 23:21:32 2021
+$end
+$version
+	Icarus Verilog
+$end
+$timescale
+	1s
+$end
+$scope module TestBench $end
+$scope module cpu $end
+$var reg 24 ! \Registar_File[1] [23:0] $end
+$upscope $end
+$upscope $end
+$scope module TestBench $end
+$scope module cpu $end
+$var reg 24 " \Registar_File[2] [23:0] $end
+$upscope $end
+$upscope $end
+$scope module TestBench $end
+$var wire 24 # data_out_of_mem_in_cpu [23:0] $end
+$var wire 24 $ data_in_mem_out_of_cpu [23:0] $end
+$var wire 1 % clock $end
+$var wire 1 & Mem_EN $end
+$var wire 1 ' Mem_CS $end
+$var wire 8 ( MAR [7:0] $end
+$scope module Mem $end
+$var wire 24 ) data_in [23:0] $end
+$var wire 1 % clk $end
+$var wire 8 * MAR [7:0] $end
+$var wire 1 & EN $end
+$var wire 1 ' CS $end
+$var reg 24 + data_out [23:0] $end
+$upscope $end
+$scope module clock_generator $end
+$var reg 1 % clock $end
+$upscope $end
+$scope module cpu $end
+$var wire 24 , MBR_in [23:0] $end
+$var wire 1 % clk $end
+$var reg 19 - IR [18:0] $end
+$var reg 8 . MAR [7:0] $end
+$var reg 24 / MBR_out [23:0] $end
+$var reg 1 ' Mem_CS $end
+$var reg 1 & Mem_EN $end
+$var reg 8 0 PC [7:0] $end
+$var reg 8 1 SP [7:0] $end
+$var reg 8 2 Status_Reg [7:0] $end
+$var reg 3 3 state [2:0] $end
+$upscope $end
+$upscope $end
+$enddefinitions $end
+#0
+$dumpvars
+b0 3
+b0 2
+b0 1
+b10100 0
+bx /
+bx .
+bx -
+bx ,
+bx +
+bx *
+bx )
+bx (
+0'
+0&
+0%
+bx $
+bx #
+bx "
+bx !
+$end
+#5
+1%
+#8
+b10100 (
+b10100 *
+b10100 .
+b1 3
+1&
+#10
+0%
+#15
+1%
+#16
+b11000100011111001 #
+b11000100011111001 +
+b11000100011111001 ,
+#17
+b10101 0
+b11000100011111001 -
+b10 3
+0&
+#20
+0%
+#25
+1%
+#28
+b11111 (
+b11111 *
+b11111 .
+b11 3
+#30
+0%
+#35
+1%
+#37
+b100 3
+1&
+#40
+0%
+#45
+1%
+#46
+b100000 #
+b100000 +
+b100000 ,
+#47
+b100000 (
+b100000 *
+b100000 .
+b11 3
+b1000 2
+#50
+0%
+#55
+1%
+#56
+b11 #
+b11 +
+b11 ,
+#57
+b101 3
+#60
+0%
+#65
+1%
+#67
+b11 !
+b0 3
+0&
+#70
+0%
+#75
+1%
+#78
+b10101 (
+b10101 *
+b10101 .
+b1 3
+b0 2
+1&
+#80
+0%
+#85
+1%
+#86
+b1110000100000011010 #
+b1110000100000011010 +
+b1110000100000011010 ,
+#87
+b10110 0
+b1110000100000011010 -
+b10 3
+0&
+#90
+0%
+#95
+1%
+#98
+b101 3
+#100
+0%
+#105
+1%
+#107
+b11000 !
+b0 3
+#110
+0%
+#115
+1%
+#118
+b10110 (
+b10110 *
+b10110 .
+b1 3
+1&
+#120
+0%
+#125
+1%
+#126
+bx #
+bx +
+bx ,
+#127
+b10111 0
+bx -
+b10 3
+0&
+#130
+0%
+#135
+1%
+#140
+0%
+#145
+1%
+#150
+0%
+#155
+1%
+#160
+0%
+#165
+1%
+#170
+0%
+#175
+1%
+#180
+0%
+#185
+1%
+#190
+0%
+#195
+1%
+#200
+0%
+#205
+1%
+#210
+0%
+#215
+1%
+#220
+0%
+#221
