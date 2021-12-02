@@ -92,28 +92,53 @@ initial begin
 
     // For testing
 
+    // //////////////////////////////////////////////////////
+    // // simulation 1
+    // //////////////////////////////////////////////////////
+
+    // ///////////// Instructions /////////////
+    
+    // // 20 Load R1,[30]
+    // Cells [20] = { load, 4'd1, 8'd30, direct };
+
+    // // 21 Load R2,4
+    // Cells [21] = { load, 4'd2, 8'd4, immediate };
+
+    // // 22 Add R1,R2
+    // Cells [22] = { add, 4'd1, 8'd2, register };
+
+    // // 23 Store R1, [31]
+    // Cells [23] = { store, 4'd1, 8'd31, direct };
+
+    // ///////////// Data /////////////
+    
+    // // 30 5
+    // Cells [30] = 19'd5;
+
+
     //////////////////////////////////////////////////////
-    // simulation 1
+    // simulation 2
     //////////////////////////////////////////////////////
 
     ///////////// Instructions /////////////
     
-    // 20 Load R1,[30]
-    Cells [20] = { load, 4'd1, 8'd30, direct };
+    // 20 Load R1,3
+    Cells [20] = { load, 4'd1, 8'd3, immediate };
 
-    // 21 Load R2,4
-    Cells [21] = { load, 4'd2, 8'd4, immediate };
+    // 21 Add R1,[31]
+    Cells [21] = { add, 4'd1, 8'd31, direct };
 
-    // 22 Add R1,R2
-    Cells [22] = { add, 4'd1, 8'd2, register };
+    // 22 Load R2,6
+    Cells [22] = { load, 4'd2, 8'd6, immediate };
 
-    // 23 Store R1, [31]
-    Cells [23] = { store, 4'd1, 8'd31, direct };
+    // 23 CMP R1, R2
+    Cells [23] = { cmp, 4'd1, 8'd2, register };
 
     ///////////// Data /////////////
     
     // 30 5
     Cells [30] = 19'd5;
+    Cells [31] = 19'd0;
 
 end
     

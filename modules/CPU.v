@@ -121,7 +121,8 @@ initial begin
     $dumpvars(0, Registar_File[1], Registar_File[2]);
 
     PC=20; // to start the sample program (defined in the memory module from address 10)
-    SP=8'b00000000;
+    SP=8'b0;
+    Status_Reg=8'b0;
     state=0;
     Mem_EN=0;
     Mem_CS=0;
