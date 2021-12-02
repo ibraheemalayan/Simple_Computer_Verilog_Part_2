@@ -11,7 +11,7 @@
 
 # Simple Computer In Verilog 💻
 
-project 1 phase II in the computer organization course (ENCS2380) at Birzeit University
+project 1 phase II in the computer organization course (ENCS2380) at [Birzeit University](https://www.birzeit.edu/)
 
 ## Partners 
 
