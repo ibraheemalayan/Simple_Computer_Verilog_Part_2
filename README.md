@@ -7,7 +7,7 @@
 -----------
 
 
-###### View Rendered README on Github [https://github.com/ibraheemalayan/Simple_Computer_Verilog_Part_1](https://github.com/ibraheemalayan/Simple_Computer_Verilog_Part_1.git)
+###### View Rendered README on Github [https://github.com/ibraheemalayan/Simple_Computer_Verilog_Part_2](https://github.com/ibraheemalayan/Simple_Computer_Verilog_Part_2.git)
 
 # Simple Computer In Verilog 💻
 
